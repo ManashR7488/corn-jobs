@@ -37,10 +37,11 @@ async function cornJob() {
 }
 
 const StartListening = () => {
-  setInterval(() => {
-    get();
-  }, 2000);
-  setInterval(() => {
+//   setInterval(() => {
+//     // get();
+//   }, 2000);
+  setInterval((i) => {
+    console.log(i)
     cornJob();
   }, 4000);
 };
