@@ -7,6 +7,7 @@ dotenv.config();
 
 const app = express();
 const port = 5000;
+const delay = 420000;
 
 const localUrl =
   process.env.NODE_ENV == "production"
@@ -35,25 +36,29 @@ async function cornJob() {
 const StartListening = () => {
   setInterval(() => {
     cornJob();
-  }, 4000);
+  }, delay);
 };
 
 function startHomeFunc() {
   setInterval(() => {
     get();
-  }, 2000);
+  }, delay);
 }
+
+
 
 app.get("/", (req, res) => {
   res.send("HOME");
 });
-app.get("/home", (req,res) => {
-    // console.log("Done")
+
+app.get("/home", (req, res) => {
+  // console.log("Done")
   res.send("Home Connected..");
 });
+
 app.get("/start", (req, res) => {
-    startHomeFunc();
-    res.send("Done")
+  startHomeFunc();
+  res.send("Done");
 });
 
 app.listen(port, () => {
