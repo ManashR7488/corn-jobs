@@ -1,4 +1,4 @@
-# 🌽 Corn Job App (Node.js + Express + Axios)
+# 🌽 Cron Job App (Node.js + Express + Axios)
 
 A self-running cron job app built with **Express.js** and **Axios** to periodically ping APIs and prevent app sleep (e.g., on Render).
 
