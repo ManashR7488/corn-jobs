@@ -29,7 +29,7 @@ async function cornJob() {
   api.forEach(async (link) => {
     try {
       const responce = await axios.get(link);
-      console.log(responce);
+    //   console.log(responce);
     } catch (error) {
       console.log("error in this link:", link, "\n", "ERROR Is:", error);
     }
