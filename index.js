@@ -8,11 +8,6 @@ dotenv.config();
 const app = express();
 const port = 5000;
 
-app.get("/home", (req, res) => {
-  console.log("This APP");
-  req.send("");
-});
-
 const localUrl =
   process.env.NODE_ENV == "production"
     ? "https://corn-jobs.onrender.com"
@@ -21,7 +16,7 @@ const localUrl =
 async function get() {
   try {
     const responce = await axios.get(`${localUrl}/home`);
-    console.log(responce);
+    // console.log(responce);
   } catch (error) {
     console.log("error in this APP", "ERROR Is:", error);
   }
@@ -39,12 +34,27 @@ async function cornJob() {
 
 const StartListening = () => {
   setInterval(() => {
-    get();
-  }, 2000);
-  setInterval(() => {
     cornJob();
   }, 4000);
 };
+
+function startHomeFunc() {
+  setInterval(() => {
+    get();
+  }, 2000);
+}
+
+app.get("/", (req, res) => {
+  res.send("HOME");
+});
+app.get("/home", (req,res) => {
+    // console.log("Done")
+  res.send("Home Connected..");
+});
+app.get("/start", (req, res) => {
+    startHomeFunc();
+    res.send("Done")
+});
 
 app.listen(port, () => {
   console.log(`connected to port: ${port}`);
