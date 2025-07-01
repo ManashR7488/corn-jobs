@@ -1,67 +1,72 @@
 import express from "express";
 import axios from "axios";
-import { api } from "./const.js";
 import dotenv from "dotenv";
+import { api } from "./const.js";
 
 dotenv.config();
 
 const app = express();
-const port = 5000;
-const delay = 420000;
+const port = process.env.PORT || 5000;
+const delay = process.env.DELAY || 420000;
 
 const localUrl =
-  process.env.NODE_ENV == "production"
+  process.env.NODE_ENV === "production"
     ? "https://corn-jobs.onrender.com"
-    : "http://localhost:5000";
+    : `http://localhost:${port}`;
 
-async function get() {
+let homeIntervalStarted = false;
+
+async function keepAlive() {
   try {
-    const responce = await axios.get(`${localUrl}/home`);
-    // console.log(responce);
+    await axios.get(`${localUrl}/home`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Self ping successful");
+    }
   } catch (error) {
-    console.log("error in this APP", "ERROR Is:", error);
+    console.error("Error in self ping:", error.message);
   }
 }
 
-async function cornJob() {
-  api.forEach(async (link) => {
+async function pingExternalAPIs() {
+  for (const link of api) {
     try {
-      const responce = await axios.get(link);
+      if (process.env.NODE_ENV !== "production") {
+        console.log("Calling:", link);
+      }
+      await axios.get(link);
     } catch (error) {
-      console.log("error in this link:", link, "\n", "ERROR Is:", error);
+      console.error(`Error fetching ${link}:`, error.message);
     }
-  });
+  }
 }
 
-const StartListening = () => {
-  setInterval(() => {
-    cornJob();
-  }, delay);
-};
-
-function startHomeFunc() {
-  setInterval(() => {
-    get();
-  }, delay);
+function startExternalPingLoop() {
+  setInterval(pingExternalAPIs, delay);
 }
 
-
+function startSelfPingLoop() {
+  setInterval(keepAlive, delay);
+}
 
 app.get("/", (req, res) => {
   res.send("HOME");
 });
 
 app.get("/home", (req, res) => {
-  // console.log("Done")
   res.send("Home Connected..");
 });
 
 app.get("/start", (req, res) => {
-  startHomeFunc();
-  res.send("Done");
+  if (!homeIntervalStarted) {
+    startSelfPingLoop();
+    homeIntervalStarted = true;
+    res.send("Started self-ping loop.");
+  } else {
+    res.send("Self-ping loop already running.");
+  }
 });
 
 app.listen(port, () => {
-  console.log(`connected to port: ${port}`);
-  StartListening();
+  console.log(`Server running on port: ${port}`);
+  startExternalPingLoop();
 });
