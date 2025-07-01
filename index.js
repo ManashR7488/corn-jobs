@@ -9,6 +9,8 @@ app.get("/", (req, res) => {
   console.log("This APP");
 });
 
+const localUrl = process.env = "production"  ? "https://corn-jobs.onrender.com" : "http://localhost:5000"
+
 async function get() {
   try {
         const responce = await axios.get("/")
