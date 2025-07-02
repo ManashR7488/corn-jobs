@@ -11,7 +11,7 @@ const delay = process.env.DELAY || 420000;
 
 const localUrl =
   process.env.NODE_ENV === "production"
-    ? "https://cron-jobs.onrender.com"
+    ? "https://corn-jobs.onrender.com"
     : `http://localhost:${port}`;
 
 let homeIntervalStarted = false;
