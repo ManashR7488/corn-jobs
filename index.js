@@ -45,7 +45,7 @@ function startExternalPingLoop() {
 }
 
 function startSelfPingLoop() {
-  setInterval(keepAlive, 2000);
+  setInterval(keepAlive, 300000);  // 5 min
 }
 
 app.get("/", (req, res) => {
